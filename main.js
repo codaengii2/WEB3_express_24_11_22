@@ -1,4 +1,33 @@
-var http = require('http');
+const express = require('express')
+const app = express()
+const port = 3000
+var fs = require('fs');
+var template = require('./lib/template.js');
+
+//route, routing
+app.get('/', (request, response) => {
+  fs.readdir('./data', function(error, filelist){
+    var title = 'Welcome';
+    var description = 'Hello, Node.js';
+    var list = template.list(filelist);
+    var html = template.HTML(title, list,
+      `<h2>${title}</h2>${description}`,
+      `<a href="/create">create</a>`
+    );
+    response.send(html);
+  });
+})
+
+//express의 route 기능을 사용하면 따로 request와 response를 정의할 필요없이
+//각각 처리하는 부분에서 구현하면 되기 때문에 필요한 것들끼리
+//모을 수 있다
+
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
+
+/* var http = require('http');
 var fs = require('fs');
 var url = require('url');
 var qs = require('querystring');
@@ -141,3 +170,7 @@ var app = http.createServer(function(request,response){
     }
 });
 app.listen(3000);
+ */
+
+//nodejs 같은 경우 request와 response가 정의된 부분을 찾아서 불러와야하는 것을
+// 볼 수 있다
